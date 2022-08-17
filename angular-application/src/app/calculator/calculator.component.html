@@ -1,0 +1,12 @@
+<div class="p-fluid grid formgrid">
+    <div class="field col-12 md:col-4">
+        <label for="rateDate">Historical exchange date</label>
+        <p-calendar [(ngModel)]="dateValue"
+                    name="rateDate"
+                    id="rateDate"
+                    [minDate]="minDate"
+                    [maxDate]="maxDate"
+                    (onSelect)="getExchangeRates()"
+                    dateFormat="dd-mm-yy"></p-calendar>
+    </div>
+</div>
