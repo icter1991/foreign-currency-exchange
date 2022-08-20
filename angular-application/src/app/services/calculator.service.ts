@@ -16,18 +16,13 @@ export class CalculatorService {
     constructor(private http: HttpClient) {
         this.apiKey = environment.apiKey
         this.apiBaseUrl = environment.apiBaseUrl
-        this.headers = new HttpHeaders().set('apikey', this.apiKey).set('Access-Control-Allow-Origin', '*');
+        this.headers = new HttpHeaders({apikey: this.apiKey});
 
-    }
-
-    // Returns real-time exchange rate data updated every 60 minutes, every 10 minutes or every 60 seconds.
-    getLatestCurrencyExchangeRate(): Observable<HistoricalExchangeRate> {
-        return this.http.get<HistoricalExchangeRate>(`${this.apiBaseUrl}/latest`, {headers: this.headers})
     }
 
     // You can query the Fixer API for historical rates by appending a date (format YYYY-MM-DD) to the base URL.
-    getCurrencyExchangeRateByDate(date: string): Observable<HistoricalExchangeRate> {
-        return this.http.get<HistoricalExchangeRate>(`${this.apiBaseUrl}/${date}`, {headers: this.headers})
+    getCurrencyExchangeRateByDate(date: string, symbols?: string, base?: string): Observable<HistoricalExchangeRate> {
+        return this.http.get<HistoricalExchangeRate>(`${this.apiBaseUrl}/${date}?${symbols ? 'symbols=' + symbols : ''}${base ? '&base=' + base : ''}`, {headers: this.headers})
     }
 
 }

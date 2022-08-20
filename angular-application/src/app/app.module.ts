@@ -8,6 +8,8 @@ import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MessageService} from "primeng/api";
+import {DropdownModule} from "primeng/dropdown";
+import {MultiSelectModule} from "primeng/multiselect";
 
 @NgModule({
     declarations: [
@@ -19,7 +21,9 @@ import {MessageService} from "primeng/api";
         CalendarModule,
         FormsModule,
         HttpClientModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        DropdownModule,
+        MultiSelectModule
     ],
     providers: [MessageService],
     bootstrap: [AppComponent]

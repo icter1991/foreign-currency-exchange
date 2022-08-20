@@ -10,3 +10,22 @@
                     dateFormat="dd-mm-yy"></p-calendar>
     </div>
 </div>
+<h5>Base Currency</h5>
+<p-dropdown [options]="currencies" [(ngModel)]="baseCurrency" optionLabel="name" optionValue="value"
+            [disabled]="loading.rate"
+            (onChange)="getExchangeRates()"
+            placeholder="Please select base currency" [filter]="true" filterBy="name"></p-dropdown>
+
+<h5>Selected currencies</h5>
+<p-multiSelect [options]="currencies" [(ngModel)]="exchangeCurrency" defaultLabel="Select exchange currencies"
+               [disabled]="loading.rate"
+               (onChange)="getExchangeRates()"
+               optionLabel="name" optionValue="value" display="chip"></p-multiSelect>
+
+<h5>Rate:</h5>
+<div class="grid" *ngIf="results">
+    <div class="col-12 md:col-4">{{'1'| currency: baseCurrency: 'symbol':'.2-2'}}</div>
+    <div class="md:col-8">
+        <p *ngFor="let rate of resultExchangeCurrencies">{{rate[1]| currency: rate[0]: 'symbol':'.2-2'}}</p>
+    </div>
+</div>

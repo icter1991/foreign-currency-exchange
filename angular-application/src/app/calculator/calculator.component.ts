@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CalculatorService} from "../services/calculator.service";
 import {DateTime} from "luxon";
 import {MessageService} from "primeng/api";
-import {HistoricalExchangeRate} from "../models/historical-exchange-rate";
+import {ExchangeRates, HistoricalExchangeRate} from "../models/historical-exchange-rate";
 
 @Component({
     selector: 'app-calculator',
@@ -17,9 +17,18 @@ export class CalculatorComponent implements OnInit {
         rate: false
     };
     results: HistoricalExchangeRate;
+    exchangeCurrency: string[] = [];
+    baseCurrency: string;
+
+    currencies: any[] = [];
+
+    exchangeRates: ExchangeRates;
+    resultExchangeCurrencies: [string, any][];
+    private initialLoad = true;
 
     constructor(private calculatorService: CalculatorService,
                 private messageService: MessageService) {
+
     }
 
     ngOnInit(): void {
@@ -35,15 +44,29 @@ export class CalculatorComponent implements OnInit {
         this.maxDate = new Date();
         this.maxDate.setMonth(nextMonth);
         this.maxDate.setFullYear(nextYear);
-    }
+        this.getExchangeRates();
 
+    }
 
     getExchangeRates() {
         this.loading.rate = true;
-        let date = DateTime.fromJSDate(this.dateValue).toFormat('yyyy-MM-dd');
-        this.calculatorService.getCurrencyExchangeRateByDate(date).subscribe({
+        const date = DateTime.fromJSDate(this.dateValue).toFormat('yyyy-MM-dd');
+
+        let exchangeCurrency = ''
+        this.exchangeCurrency.forEach(item => {
+            exchangeCurrency += item + ','
+        })
+        this.calculatorService.getCurrencyExchangeRateByDate(date, exchangeCurrency, this.baseCurrency).subscribe({
             next: value => {
                 this.results = value
+                this.exchangeRates = value.rates
+
+                this.resultExchangeCurrencies = Object.entries(value.rates);
+                if (this.initialLoad) {
+
+                    Object.keys(this.exchangeRates).forEach(key => this.currencies.push({name: key, value: key}));
+                    this.initialLoad = false;
+                }
             }, error: err => {
                 this.messageService.add({severity: 'error', summary: 'Error', detail: err})
                 this.loading.rate = false;
